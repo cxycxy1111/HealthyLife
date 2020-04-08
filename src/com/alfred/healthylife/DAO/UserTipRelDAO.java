@@ -6,11 +6,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class UserTipDAO extends DAO{
+public class UserTipRelDAO extends DAO {
 
     private SQLHelper helper;
 
-    public UserTipDAO() {
+    public UserTipRelDAO() {
         helper = new SQLHelper();
     }
 

@@ -1,19 +1,19 @@
 package com.alfred.healthylife.Service;
 
-import com.alfred.healthylife.DAO.UserTipDAO;
+import com.alfred.healthylife.DAO.UserTipRelDAO;
 import com.alfred.healthylife.DAO.UserTipLogDAO;
 import com.alfred.healthylife.Util.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class UserTipService extends Service{
+public class UserTipRelService extends Service {
 
     private UserTipLogDAO userTipLogDAO;
-    private UserTipDAO userTipDAO;
+    private UserTipRelDAO userTipRelDAO;
 
-    public UserTipService() {
-        userTipDAO = new UserTipDAO();
+    public UserTipRelService() {
+        userTipRelDAO = new UserTipRelDAO();
         userTipLogDAO = new UserTipLogDAO();
     }
 
@@ -25,16 +25,16 @@ public class UserTipService extends Service{
      * @return
      */
     public String addFavorite(long user_id,long tip_id,String create_time) {
-        ArrayList<HashMap<String,Object>> list_rel = userTipDAO.queryByUserAndTip(user_id,tip_id,0);
+        ArrayList<HashMap<String, Object>> list_rel = userTipRelDAO.queryByUserAndTip(user_id, tip_id, 0);
         if (list_rel.size() == 0) {//新增
-            if (userTipDAO.addFavorite(user_id,tip_id,0,create_time)) {
+            if (userTipRelDAO.addFavorite(user_id, tip_id, 0, create_time)) {
                 userTipLogDAO.addFavorite(user_id,tip_id,create_time,user_id,1);
                 return SUCCESS;
             }
             return FAIL;
         }
         if (Util.getBoolFromMapList(list_rel,"del")) {//处于删除状态时，进行恢复操作
-            if (userTipDAO.recoverFavorite(user_id,tip_id,0)) {
+            if (userTipRelDAO.recoverFavorite(user_id, tip_id, 0)) {
                 userTipLogDAO.addFavorite(user_id,tip_id,create_time,user_id,1);
                 return SUCCESS;
             }
@@ -51,12 +51,12 @@ public class UserTipService extends Service{
      * @return
      */
     public String removeFavorite(long user_id,long tip_id,String create_time) {
-        ArrayList<HashMap<String,Object>> list_rel = userTipDAO.queryByUserAndTip(user_id,tip_id,0);
+        ArrayList<HashMap<String, Object>> list_rel = userTipRelDAO.queryByUserAndTip(user_id, tip_id, 0);
         if (list_rel.size() == 0) {//本来没有收藏的话，不需要取消收藏
             return SUCCESS;
         }
         if (!Util.getBoolFromMapList(list_rel,"del")) {//如果正处于收藏状态
-            if (userTipDAO.removeFavorite(user_id,tip_id,0)) {
+            if (userTipRelDAO.removeFavorite(user_id, tip_id, 0)) {
                 userTipLogDAO.removeFavorite(user_id,tip_id,create_time,user_id,1);
                 return SUCCESS;
             }

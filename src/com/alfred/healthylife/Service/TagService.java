@@ -1,6 +1,10 @@
 package com.alfred.healthylife.Service;
 
 import com.alfred.healthylife.DAO.TagDAO;
+import com.alfred.healthylife.Util.Util;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TagService extends Service {
 
@@ -10,24 +14,40 @@ public class TagService extends Service {
         tagDAO = new TagDAO();
     }
 
-    public void create(String title) {
-
+    public String create(String title) {
+        ArrayList<HashMap<String, Object>> list_info = tagDAO.query(title);//查查标题是否已经存在
+        if (list_info.size() != 0) {
+            return DUPLICATE;
+        }
+        if (tagDAO.create(title)) {
+            return SUCCESS;
+        }
+        return FAIL;
     }
 
-    public void query(int page_no, int num_lmt) {
-
+    public String query(String del, int page_no, int num_lmt) {
+        return Util.transformFromCollection(tagDAO.query(del, page_no, num_lmt));
     }
 
-    public void update(long id, String title) {
-
+    public String update(long id, String title) {
+        if (tagDAO.update(id, title)) {
+            return SUCCESS;
+        }
+        return FAIL;
     }
 
-    public void delete(long id) {
-
+    public String delete(long id) {
+        if (tagDAO.delete(id)) {
+            return SUCCESS;
+        }
+        return FAIL;
     }
 
-    public void recover(long id) {
-
+    public String recover(long id) {
+        if (tagDAO.recover(id)) {
+            return SUCCESS;
+        }
+        return FAIL;
     }
 
 }

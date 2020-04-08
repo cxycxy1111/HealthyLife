@@ -21,7 +21,7 @@ public class TipDAO extends DAO{
      * @param id
      * @return
      */
-    public ArrayList<HashMap<String,Object>> queryTipById(long id) {
+    public ArrayList<HashMap<String, Object>> query(long id) {
         String sql = "SELECT * FROM tip a WHERE id=" + id;
         return helper.query(sql);
     }
@@ -31,7 +31,7 @@ public class TipDAO extends DAO{
      * @param keywords
      * @return
      */
-    public ArrayList<HashMap<String,Object>> queryTipsByKeywords(String[] keywords) {
+    public ArrayList<HashMap<String, Object>> query(String[] keywords) {
         StringBuilder builder_keywords = new StringBuilder();
         for (int i = 0;i < keywords.length;i++) {
             builder_keywords.append(" title LIKE '%").append(keywords[i]).append("%' OR");

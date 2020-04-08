@@ -23,7 +23,7 @@ public class TipService extends Service{
      * @return
      */
     public String query(long id) {
-        return Util.transformFromCollection(tipDAO.queryTipById(id));
+        return Util.transformFromCollection(tipDAO.query(id));
     }
 
     /**
@@ -46,7 +46,7 @@ public class TipService extends Service{
         }else {
             keyword_list = new String[]{keywords};
         }
-        return Util.transformFromCollection(tipDAO.queryTipsByKeywords(keyword_list));
+        return Util.transformFromCollection(tipDAO.query(keyword_list));
     }
 
     /**

@@ -80,14 +80,15 @@ public class TagDAO extends DAO{
 
     /**
      * 通过页码查询标签
+     * @param del
      * @param page_no
      * @param num_lmt
      * @return
      */
-    public ArrayList<HashMap<String, Object>> query(int page_no, int num_lmt) {
+    public ArrayList<HashMap<String, Object>> query(String del, int page_no, int num_lmt) {
         int location = (page_no - 1) * num_lmt;
         String sql = "SELECT * FROM tag " +
-                "WHERE del=0 " +
+                "WHERE del IN (" + del + ") " +
                 "ORDER BY id DESC " +
                 "LIMIT " + location + "," + num_lmt;
         return helper.query(sql);
