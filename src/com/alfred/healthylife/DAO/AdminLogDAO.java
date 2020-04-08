@@ -16,7 +16,7 @@ public class AdminLogDAO extends DAO{
         String sql =
                 "INSERT INTO admin_log (admin_id,action,info,create_time,creator,creator_type) VALUES (" + admin_id +
                         "," +
-                        action + ",'" + info + "','" + create_time + "'," + creator + "," + creator_type + ");";
+                        action + ",'" + info + "','" + create_time + "'," + creator + "," + creator_type + ")";
         try {
             helper.update(sql);
         } catch (SQLException e) {
@@ -26,13 +26,14 @@ public class AdminLogDAO extends DAO{
 
     /**
      * 创建用户
+     * @param id
      * @param info 信息
      * @param create_time 创建时间
      * @param creator 创建人
      * @param creator_type 创建人类型
      */
-    public void create(String info,String create_time,long creator,int creator_type) {
-        create(0,0,info,create_time,creator,creator_type);
+    public void create(long id, String info, String create_time, long creator, int creator_type) {
+        create(id, 0, info, create_time, creator, creator_type);
     }
 
     /**
@@ -135,6 +136,18 @@ public class AdminLogDAO extends DAO{
      */
     public void login(long admin_id,String info,String create_time,long creator,int creator_type) {
         create(admin_id,9,info,create_time,creator,creator_type);
+    }
+
+    /**
+     * 登出
+     *
+     * @param admin_id
+     * @param create_time
+     * @param creator
+     * @param creator_type
+     */
+    public void logout(long admin_id, String create_time, long creator, int creator_type) {
+        create(admin_id, 10, "", create_time, creator, creator_type);
     }
 
 

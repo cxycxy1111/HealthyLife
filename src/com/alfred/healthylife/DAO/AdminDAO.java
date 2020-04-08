@@ -28,7 +28,7 @@ public class AdminDAO extends DAO{
         String sql = "SELECT id,nick_name FROM admin " +
                 "WHERE del IN (" + del + ") AND locked IN (" + locked +") " +
                 "ORDER BY id DESC " +
-                "LIMIT" + location + "," + num_limit;
+                "LIMIT " + location + "," + num_limit;
         return helper.query(sql);
     }
 
@@ -103,14 +103,14 @@ public class AdminDAO extends DAO{
      * @param register_time 注册时间
      * @return 新增结果
      */
-    public boolean create(String email,String password,String register_time) {
+    public long create(String email, String password, String register_time) {
         String sql = "INSERT INTO admin (nick_name,email,password,register_time,del,locked) VALUES ('" + email +
                 "','" + email + "','" + password + "','" + register_time + "',0,0)";
         try {
-            return helper.update(sql);
+            return helper.insert(sql);
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return 0;
         }
     }
 

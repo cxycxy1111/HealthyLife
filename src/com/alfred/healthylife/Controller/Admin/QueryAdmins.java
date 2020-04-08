@@ -27,7 +27,7 @@ public class QueryAdmins extends BaseServlet {
         super.dealWithSessionAlive(request, response, session, out, current_user);
         String del = request.getParameter("del");
         String locked = request.getParameter("locked");
-        int page_no = Util.getIntFromRequest(request,"del");
+        int page_no = Util.getIntFromRequest(request, "page_no");
         int num_lmt = 20;
 
         AdminService adminService = new AdminService();

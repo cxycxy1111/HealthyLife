@@ -14,7 +14,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-@WebServlet(name = "UserLogin",urlPatterns = "/user/loginCheck")
+@WebServlet(name = "UserLogin", urlPatterns = "/user/login")
 public class UserLogin extends BaseServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

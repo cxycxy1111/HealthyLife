@@ -50,17 +50,16 @@ public class TipDAO extends DAO{
      * @param creator_type
      * @return
      */
-    public boolean create(String title,String tag,String summary,String content,String create_time,long creator,
-                          int creator_type) {
-        String sql =
-                "INSERT INTO tip (title,tag,summary,content,create_time,last_modify_time,creator,creator_type) VALUES" +
+    public long create(String title, String tag, String summary, String content, String create_time, long creator,
+                       int creator_type) {
+        String sql = "INSERT INTO tip (title,tag,summary,content,create_time,last_modify_time,creator,creator_type) VALUES" +
                         " ('" + title + "','" + tag + "','" + summary + "','" + content + "','" + create_time + "','" +
                         create_time + "'," + creator + "," + creator_type + ")";
         try {
-            return helper.update(sql);
+            return helper.insert(sql);
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return 0;
         }
     }
 

@@ -22,14 +22,14 @@ public class UserDAO extends DAO{
      * @param register_time 注册时间
      * @return 新增结果
      */
-    public boolean create(String email,String password,String register_time) {
+    public long create(String email, String password, String register_time) {
         String sql = "INSERT INTO user (nick_name,email,password,register_time,del,locked) VALUES ('" + email +
                 "','" + email + "','" + password + "','" + register_time + "',0,0)";
         try {
-            return helper.update(sql);
+            return helper.insert(sql);
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return 0;
         }
     }
 

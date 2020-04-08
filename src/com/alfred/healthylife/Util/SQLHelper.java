@@ -1,5 +1,6 @@
 package com.alfred.healthylife.Util;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -115,7 +116,6 @@ public class SQLHelper {
      * @return boolean 成功返回true，失败返回false
      */
     public boolean update(String sql) throws SQLException {
-        //System.out.println(sdf.format(new Date()) +  ",SQL:" + sql);
         boolean b = false;
         if(sql.equals("") || sql == null){
             return b;
@@ -132,6 +132,34 @@ public class SQLHelper {
         }
         conn.close();
         return b;
+    }
+
+    /**
+     * 插入、修改数据操作
+     *
+     * @param sql 语句
+     * @return boolean 成功返回true，失败返回false
+     */
+    public long insert(String sql) throws SQLException {
+        boolean b = false;
+        long id = 0;
+        if (sql.equals("") || sql == null) {
+            return 0;
+        }
+        try {
+            conn = DatabaseBean.getConnection();
+            ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ResultSet rs = null;
+            ps.executeUpdate();
+            rs = ps.getGeneratedKeys();//这一句代码就是得到插入的记录的id
+            while (rs.next()) {
+                id = rs.getLong(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        conn.close();
+        return id;
     }
 
 }

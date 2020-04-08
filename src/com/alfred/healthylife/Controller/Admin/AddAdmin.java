@@ -26,7 +26,7 @@ public class AddAdmin extends BaseServlet {
     protected void dealWithSessionAlive(HttpServletRequest request, HttpServletResponse response, HttpSession session, PrintWriter out, long current_user) throws IOException {
         super.dealWithSessionAlive(request, response, session, out, current_user);
         String email = request.getParameter("email");
-        String password = request.getParameter("passowrd");
+        String password = request.getParameter("password");
         String confirm_password = request.getParameter("confirm_password");
 
         AdminService adminService = new AdminService();

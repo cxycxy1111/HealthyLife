@@ -67,13 +67,14 @@ public class TipService extends Service{
         if (summary.equals("") || content.equals("")) {
             return TOO_SHORT;
         }
-        if (tipDAO.create(title, tag, summary, content, create_time, creator, creator_type)) {
+        long id_new = tipDAO.create(title, tag, summary, content, create_time, creator, creator_type);
+        if (id_new != 0) {
             ArrayList<HashMap<String,Object>> list_tip_log = new ArrayList<>();
             HashMap<String,Object> map_tip_log = new HashMap<>();
             map_tip_log.put("summary",summary);
             map_tip_log.put("content",content);
             list_tip_log.add(map_tip_log);
-            tipLogDAO.add(Util.transformFromCollection(list_tip_log),create_time,creator,creator_type);
+            tipLogDAO.add(id_new, Util.transformFromCollection(list_tip_log), create_time, creator, creator_type);
             return SUCCESS;
         }
         return FAIL;

@@ -1,6 +1,7 @@
 package com.alfred.healthylife.Controller.User;
 
 import com.alfred.healthylife.Controller.BaseServlet;
+import com.alfred.healthylife.DAO.UserLogDAO;
 import com.alfred.healthylife.Service.UserService;
 import com.alfred.healthylife.Util.Util;
 
@@ -11,31 +12,29 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-@WebServlet(name = "AddUser",urlPatterns = "/user/add")
-public class AddUser extends BaseServlet {
+@WebServlet(name = "UserLogout", urlPatterns = "/user/logout")
+public class UserLogout extends BaseServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request,response);
+        doGet(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        super.doGet(request,response);
+        super.doGet(request, response);
     }
 
     protected void dealWithSessionAlive(HttpServletRequest request, HttpServletResponse response, HttpSession session, PrintWriter out, long current_user) throws IOException {
-        super.dealWithSessionAlive(request, response, session, out, current_user);
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String confirm_password = request.getParameter("confirm_password");
-
-        UserService userService = new UserService();
-        out.append(userService.create(email,password,confirm_password,current_user, Util.getCurrentTime()));
+        UserLogDAO userLogDAO = new UserLogDAO();
+        userLogDAO.logout(current_user, Util.getCurrentTime(), current_user, 1);
+        session.invalidate();
+        out.append(SUCCESS);
     }
 
     protected void dealWithSessionDead(HttpServletRequest request, HttpServletResponse response, PrintWriter out) throws IOException {
-        super.dealWithSessionDead(request, response, out);
+        out.append(SUCCESS);
     }
-
 
 }

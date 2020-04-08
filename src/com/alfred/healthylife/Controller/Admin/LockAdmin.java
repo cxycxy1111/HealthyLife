@@ -28,7 +28,7 @@ public class LockAdmin extends BaseServlet {
         long admin_id = Util.getLongFromRequest(request,"admin_id");
 
         AdminService adminService = new AdminService();
-        out.append(adminService.delete(admin_id,current_user,Util.getCurrentTime()));
+        out.append(adminService.lock(admin_id, current_user, Util.getCurrentTime()));
     }
 
     protected void dealWithSessionDead(HttpServletRequest request, HttpServletResponse response, PrintWriter out) throws IOException {
