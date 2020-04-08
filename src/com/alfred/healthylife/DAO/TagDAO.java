@@ -35,7 +35,8 @@ public class TagDAO extends DAO{
      * @return
      */
     public boolean delete(long id) {
-        String sql = "UPDATE tag SET del = 1 WHERE id=" + id;
+        String sql = "UPDATE tag SET del = 1 " +
+                "WHERE id=" + id;
         try {
             return helper.update(sql);
         } catch (SQLException e) {
@@ -50,7 +51,8 @@ public class TagDAO extends DAO{
      * @return
      */
     public boolean recover(long id) {
-        String sql = "UPDATE tag SET del = 0 WHERE id=" + id;
+        String sql = "UPDATE tag SET del = 0 " +
+                "WHERE id=" + id;
         try {
             return helper.update(sql);
         } catch (SQLException e) {
@@ -62,10 +64,12 @@ public class TagDAO extends DAO{
     /**
      * 更新标签
      * @param id
+     * @param title
      * @return
      */
     public boolean update(long id,String title) {
-        String sql = "UPDATE tag SET title = " + title + "' WHERE id=" + id;
+        String sql = "UPDATE tag SET title = " + title + "' " +
+                "WHERE id=" + id;
         try {
             return helper.update(sql);
         } catch (SQLException e) {
@@ -75,11 +79,29 @@ public class TagDAO extends DAO{
     }
 
     /**
-     * 更新标签
+     * 通过页码查询标签
+     * @param page_no
+     * @param num_lmt
      * @return
      */
-    public ArrayList<HashMap<String, Object>> query() {
-        String sql = "SELECT * FROM ";
+    public ArrayList<HashMap<String, Object>> query(int page_no, int num_lmt) {
+        int location = (page_no - 1) * num_lmt;
+        String sql = "SELECT * FROM tag " +
+                "WHERE del=0 " +
+                "ORDER BY id DESC " +
+                "LIMIT " + location + "," + num_lmt;
+        return helper.query(sql);
+    }
+
+    /**
+     * 通过标题查询标签
+     *
+     * @param title
+     * @return
+     */
+    public ArrayList<HashMap<String, Object>> query(String title) {
+        String sql = "SELECT * FROM tag " +
+                "WHERE title='" + title + "'";
         return helper.query(sql);
     }
 

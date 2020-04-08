@@ -71,51 +71,6 @@ public class UserTipDAO extends DAO{
     }
 
     /**
-     * 查询
-     * @param user_id
-     * @param tip_id
-     * @param type
-     * @return
-     */
-    public ArrayList<HashMap<String, Object>> queryByUserAndTip(long user_id, long tip_id, int type) {
-        String sql = "SELECT * FROM user_tip " +
-                "WHERE user_id=" + user_id + " AND tip_id=" + tip_id + " AND type=" + type;
-        return helper.query(sql);
-    }
-
-    /**
-     * 通过用户ID查询帖子列表
-     * @param user_id
-     * @param type
-     * @return
-     */
-    public ArrayList<HashMap<String, Object>> queryByUser(long user_id, int type,int page_no,int num_limit) {
-        int location = (page_no-1)*num_limit;
-        String sql = "SELECT b.id,b.title,b.summary FROM user_tip a " +
-                        "LEFT JOIN tip b ON a.tip_id=b.id " +
-                        "WHERE a.del=0 AND a.user_id=" + user_id  + " a.type=" + type + " " +
-                        "ORDER BY a.create_time DESC " +
-                        "LIMIT " + location + "," + num_limit;
-        return helper.query(sql);
-    }
-
-    /**
-     * 通过帖子ID查询用户列表
-     * @param tip_id
-     * @param type
-     * @return
-     */
-    public ArrayList<HashMap<String, Object>> queryByTip(long tip_id, int type,int page_no,int num_limit) {
-        int location = (page_no-1)*num_limit;
-        String sql = "SELECT b.id,b.nick_name FROM user_tip a " +
-                "LEFT JOIN user b ON a.user_id=b.id " +
-                "WHERE a.del=0 AND a.tip_id=" + tip_id  + " a.type=" + type + " " +
-                "ORDER BY a.create_time DESC " +
-                "LIMIT " + location + "," + num_limit;
-        return helper.query(sql);
-    }
-
-    /**
      * 新增收藏
      * @param user_id
      * @param tip_id
@@ -149,4 +104,51 @@ public class UserTipDAO extends DAO{
         return delete(user_id, tip_id, type);
     }
 
+    /**
+     * 查询
+     *
+     * @param user_id
+     * @param tip_id
+     * @param type
+     * @return
+     */
+    public ArrayList<HashMap<String, Object>> queryByUserAndTip(long user_id, long tip_id, int type) {
+        String sql = "SELECT * FROM user_tip " +
+                "WHERE user_id=" + user_id + " AND tip_id=" + tip_id + " AND type=" + type;
+        return helper.query(sql);
+    }
+
+    /**
+     * 通过用户ID查询帖子列表
+     *
+     * @param user_id
+     * @param type
+     * @return
+     */
+    public ArrayList<HashMap<String, Object>> queryByUser(long user_id, int type, int page_no, int num_limit) {
+        int location = (page_no - 1) * num_limit;
+        String sql = "SELECT b.id,b.title,b.summary FROM user_tip a " +
+                "LEFT JOIN tip b ON a.tip_id=b.id " +
+                "WHERE a.del=0 AND a.user_id=" + user_id + " a.type=" + type + " " +
+                "ORDER BY a.create_time DESC " +
+                "LIMIT " + location + "," + num_limit;
+        return helper.query(sql);
+    }
+
+    /**
+     * 通过帖子ID查询用户列表
+     *
+     * @param tip_id
+     * @param type
+     * @return
+     */
+    public ArrayList<HashMap<String, Object>> queryByTip(long tip_id, int type, int page_no, int num_limit) {
+        int location = (page_no - 1) * num_limit;
+        String sql = "SELECT b.id,b.nick_name FROM user_tip a " +
+                "LEFT JOIN user b ON a.user_id=b.id " +
+                "WHERE a.del=0 AND a.tip_id=" + tip_id + " a.type=" + type + " " +
+                "ORDER BY a.create_time DESC " +
+                "LIMIT " + location + "," + num_limit;
+        return helper.query(sql);
+    }
 }
