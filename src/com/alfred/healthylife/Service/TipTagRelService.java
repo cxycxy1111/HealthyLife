@@ -24,6 +24,4 @@ public class TipTagRelService extends Service {
         return FAIL;
     }
 
-
-
 }

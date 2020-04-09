@@ -26,9 +26,10 @@ public class UserLogout extends BaseServlet {
         super.doGet(request, response);
     }
 
-    protected void dealWithSessionAlive(HttpServletRequest request, HttpServletResponse response, HttpSession session, PrintWriter out, long current_user) throws IOException {
+    protected void dealWithSessionAlive(HttpServletRequest request, HttpServletResponse response, HttpSession session
+            , PrintWriter out, long current_user, int current_user_type) throws IOException {
         UserLogDAO userLogDAO = new UserLogDAO();
-        userLogDAO.logout(current_user, Util.getCurrentTime(), current_user, 1);
+        userLogDAO.logout(current_user, Util.getCurrentTime(), current_user, current_user_type);
         session.invalidate();
         out.append(SUCCESS);
     }

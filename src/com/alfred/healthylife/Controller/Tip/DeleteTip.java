@@ -23,8 +23,9 @@ public class DeleteTip extends BaseServlet {
         super.doGet(request,response);
     }
 
-    protected void dealWithSessionAlive(HttpServletRequest request, HttpServletResponse response, HttpSession session, PrintWriter out, long current_user) throws IOException {
-        super.dealWithSessionAlive(request, response, session, out, current_user);
+    protected void dealWithSessionAlive(HttpServletRequest request, HttpServletResponse response, HttpSession session,
+                                        PrintWriter out, long current_user, int current_user_type) throws IOException {
+        super.dealWithSessionAlive(request, response, session, out, current_user, current_user_type);
         long id = Util.getLongFromRequest(request,"id");
 
         TipService tipService = new TipService();

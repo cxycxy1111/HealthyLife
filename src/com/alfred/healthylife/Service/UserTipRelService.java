@@ -65,4 +65,32 @@ public class UserTipRelService extends Service {
         return SUCCESS;
     }
 
+    /**
+     * 查询用户关注了的贴士列表
+     *
+     * @param user_id
+     * @param type
+     * @param page_no
+     * @param num_lmt
+     * @return
+     */
+    public String queryByUser(long user_id, int type, int page_no, int num_lmt) {
+        return Util.transformFromCollection(userTipRelDAO.queryByUser(user_id, type, page_no, num_lmt));
+    }
+
+    /**
+     * 查询用户关注了的贴士列表
+     *
+     * @param tip_id
+     * @param type
+     * @param page_no
+     * @param num_lmt
+     * @return
+     */
+    public String queryByTip(long tip_id, int type, int page_no, int num_lmt) {
+        return Util.transformFromCollection(userTipRelDAO.queryByTip(tip_id, type, page_no, num_lmt));
+    }
+
+
+
 }

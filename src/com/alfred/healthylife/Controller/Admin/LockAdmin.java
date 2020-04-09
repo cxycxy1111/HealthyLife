@@ -23,12 +23,13 @@ public class LockAdmin extends BaseServlet {
         super.doGet(request,response);
     }
 
-    protected void dealWithSessionAlive(HttpServletRequest request, HttpServletResponse response, HttpSession session, PrintWriter out, long current_user) throws IOException {
-        super.dealWithSessionAlive(request, response, session, out, current_user);
+    protected void dealWithSessionAlive(HttpServletRequest request, HttpServletResponse response, HttpSession session
+            , PrintWriter out, long current_user, int current_user_type) throws IOException {
+        super.dealWithSessionAlive(request, response, session, out, current_user, current_user_type);
         long admin_id = Util.getLongFromRequest(request,"admin_id");
 
         AdminService adminService = new AdminService();
-        out.append(adminService.lock(admin_id, current_user, Util.getCurrentTime()));
+        out.append(adminService.lock(admin_id, current_user, Util.getCurrentTime(), current_user_type));
     }
 
     protected void dealWithSessionDead(HttpServletRequest request, HttpServletResponse response, PrintWriter out) throws IOException {

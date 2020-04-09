@@ -26,10 +26,11 @@ public class AdminLogout extends BaseServlet {
         super.doGet(request, response);
     }
 
-    protected void dealWithSessionAlive(HttpServletRequest request, HttpServletResponse response, HttpSession session, PrintWriter out, long current_user) throws IOException {
+    protected void dealWithSessionAlive(HttpServletRequest request, HttpServletResponse response, HttpSession session
+            , PrintWriter out, long current_user, int current_user_type) throws IOException {
         session.invalidate();
         AdminLogDAO adminLogDAO = new AdminLogDAO();
-        adminLogDAO.logout(current_user, Util.getCurrentTime(), current_user, 0);
+        adminLogDAO.logout(current_user, Util.getCurrentTime(), current_user, current_user_type);
         out.append(SUCCESS);
 
     }

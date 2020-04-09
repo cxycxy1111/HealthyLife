@@ -131,9 +131,9 @@ public class AdminService extends Service{
      * @param create_time
      * @return
      */
-    public String lock(long id,long creator,String create_time) {
+    public String lock(long id, long creator, String create_time, int creator_type) {
         if (adminDAO.lock(id)) {
-            adminLogDAO.lock(id,create_time,creator,0);
+            adminLogDAO.lock(id, create_time, creator, creator_type);
             return SUCCESS;
         }
         return FAIL;
