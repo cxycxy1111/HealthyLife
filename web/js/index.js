@@ -1,293 +1,292 @@
-var url_load_novel_list = "/healthylife/list";
-var current_section = "B";
-var current_page_no = 1;
-var is_reload = false;
+var wEditor;
+var joditEditor;
+var tip_id;
+var domain = "https://openreading.natapp4.cc/";
 
 /**
- * 开始加载小说列表
- * @param that
+ * 检查登录状态，判断是否需要登录
  */
-function loadbooks(that) {
-    is_reload = false;
-    $("#paragraph_load_more").text("加载更多");
-    var e = window.event;
-    current_page_no = 1;
-    $("p.head-tab-paragraph").css("color","black");
-    if (e.target.id == undefined) {
-        $("p#A").css("color","#f0a54d");
-        current_section = "中国文学";
-    } else {
-        $("p#" + e.target.id).css("color","#f0a54d");
-        current_section = e.target.textContent;
-    }
-    $(".body-container").remove();
-    onloadbooks();
+function checkIsNeedLogin() {
+    httpRequest("/admin/loginStatusCheck", {}, function (data) {
+
+    }, function (data) {
+        if (data.status == 'success') {
+            $("#center-div-container").load("../pages/CenterTipActionList.html", function () {
+                $("#div-add-new-tip").css("background-color", "#e0e0eb");
+            });//加载中视图
+            $("#right-div-container").load("../pages/RightAddNewTip.html", function () {
+                loadwangEditor();
+            });//加载右视图
+        } else {
+            $("#right-div-container").load("../pages/RightLogin.html");
+        }
+    }, function (data) {
+    });
 }
 
 /**
- * 加载小说列表
+ * 登录
  */
-function onloadbooks() {
-    var param = "section=" + current_section + "&page_no=" + current_page_no;
-    if ($("#paragraph_load_more").text() == '加载完毕') {
+function login() {
+    var param = {email: $("#email").val(), password: $("#password").val()};
+    httpRequest("/admin/login", param, function (data) {
+        $("#center-div-container").load("../pages/CenterTipActionList.html");//
+        $("#right-div-container").children().remove();//移除登录框
+        $("#right-div-container").load("../pages/RightAddNewTip.html", function () {
+            $("#div-add-new-tip").css("background-color", "#e0e0eb");
+            loadEditor();
+        });
 
-    }else {
-        httpRequest("GET",url_load_novel_list,param,function (data) {
-            var str = "";
-            for (var i = 0;i < data.length;i++) {
-                str = str +
-                    "<div class='body-container'" + " id='" + data[i].id + "' onclick='openNovelDetail(this)'>" +
-                        "<div class='container_img_cover'>" +
-                            "<img class='img_cover' src='data:image/jpeg;base64," + data[i].cover + "' /> " +
-                        "</div>" +
-                        "<div class='div_book_info'>" +
-                            "<p class='p-body-bookname'>" + data[i].name + "</p>" +
-                        "</div>" +
-                    "</div>"
-            }
-            if (data.length>=20) {
-                current_page_no = current_page_no + 1;
-            }else {
-                $("#paragraph_load_more").text("加载完毕");
-            }
-            $(".body-parent-container").append(str);
-        },function (data) {
+    }, function (data) {
 
-        },function (data) {
-            $("#paragraph_load_more").text("加载完毕");
+    },function (data) {
+    });
+}
+
+//切换中视图
+function switchCenterContainer(that) {
+    var id = $(that).attr("id");
+
+    var centerNode = "";
+    var centerPage = "";
+    var rightPage = "";
+    centerNode = "div-add-new-tip";
+    centerPage = "../pages/CenterTipActionList.html";
+    rightPage = "../pages/RightAddNewTip.html";
+
+    $("#left-div-container").children(".sub-div-container").css("background-color", "");
+    $("#center-div-container").children().remove();
+    $("#right-div-container").children().remove();
+    $("#center-div-container").load(centerPage, function () {//加载中视图
+        $("#" + centerNode).css("background-color", "#e0e0eb");//中视图第一个节点修改颜色
+    });
+    $("#right-div-container").load(rightPage, function () {
+        if (id == "div-left-tip") {
+            loadEditor();
+        }
+    });//加载右视图
+}
+
+//点击中视图，切换右视图
+function switchRightContainer(that) {
+    var id = $(that).attr("id");
+
+    var targetFile;
+    if (id == "div-add-new-admin") {
+        targetFile = "../pages/RightAddNewAdmin.html";
+    } else if (id == "div-admin-list") {
+        targetFile = "../pages/RightAdminList.html";
+    } else if (id == "div-add-new-user") {
+        targetFile = "../pages/RightAddNewUser.html";
+    } else if (id == "div-user-list") {
+        targetFile = "../pages/RightUserList.html";
+    } else if (id == "div-add-new-tip") {
+        targetFile = "../pages/RightAddNewTip.html";
+    } else if (id == "div-tip-list") {
+        targetFile = "../pages/RightTipList.html";
+    } else if (id == "div-add-new-tag") {
+        targetFile = "../pages/RightAddNewTag.html";
+    } else if (id == "div-tag-list") {
+        targetFile = "../pages/RightTagList.html";
+    } else if (id == "div-tip-update") {
+        targetFile = "../pages/RightTipUpdate.html";
+    }
+
+    $("#right-div-container").children().remove();
+    $("#center-div-container").children().css("background-color", "");
+    $("#right-div-container").load(targetFile, function () {
+        $("#" + id).css("background-color", "#e0e0eb");
+        if (id == "div-add-new-tip") {
+            loadEditor();
+        } else if (id == "div-tip-update") {
+            loadEditor();
+        }
+    });
+
+}
+
+//加载富文本编辑器
+function loadEditor() {
+    loadwangEditor();
+}
+
+//加载Jodit编辑器
+function loadJodit() {
+    joditEditor = new Jodit('#editor', {
+        uploader: {
+            url: "/file/upload",
+            insertImageAsBase64URI: false,
+            imagesExtensions: [
+                "jpg",
+                "png",
+                "jpeg",
+                "gif"
+            ],
+            filesVariableName: 'files',
+            withCredentials: false,
+            pathVariableName: "path",
+            format: "json",
+            method: "POST",
+            prepareData: function (formdata) {
+                file = formdata.getAll("files[0]")[0];
+                formdata.append("aboutMePic", file);
+                return formdata;
+            },
+            isSuccess: function (e) {
+                console.log(e);
+                return e.data;
+            },
+            getMessage: function (e) {
+                return void 0 !== e.data.messages && Array.isArray(e.data.messages) ? e.data.messages.join("") : ""
+            },
+            process: function (resp) {
+                var ss = this;
+                console.log(resp);
+                var arrfile = [];
+                arrfile.unshift(resp.data);
+                console.log(arrfile.length + "" + arrfile[0]);
+                return {
+                    files: arrfile,
+                    path: '',
+                    baseurl: '',
+                    error: resp.msg,
+                    msg: resp.msg
+                };
+            },
+            error: function (e) {
+                this.jodit.events.fire("errorMessage", e.message, "error", 4e3)
+            },
+            defaultHandlerSuccess: function (resp) {
+
+            },
+            defaultHandlerError: function (e) {
+                this.jodit.events.fire("errorMessage", e.message)
+            },
+            contentType: function (e) {
+                return (void 0 === this.jodit.ownerWindow.FormData || "string" == typeof e) &&
+                    "application/x-www-form-urlencoded; charset=UTF-8"
+            }
+        },
+        filebrowser: {
+            ajax: {
+                url: 'http://localhost:8181/index-test.php'
+            }
+        }
+    });
+
+}
+
+//加载wangEditor
+function loadwangEditor() {
+    var E = window.wangEditor;
+    wEditor = new E('#editor');
+    wEditor.customConfig.height = 600;
+    wEditor.customConfig.uploadImgServer = '/file/upload';
+    wEditor.customConfig.uploadImgHooks = {
+        before: function (xhr, editor, files) {
+
+        },
+        success: function (xhr, editor, result) {
+
+
+        },
+        fail: function (xhr, editor, result) {
+
+        },
+        error: function (xhr, editor) {
+
+        },
+        timeout: function (xhr, editor) {
+
+        },
+        customInsert: function (insertImg, result, editor) {
+            for (var i = 0; i < result.length; i++) {
+                insertImg(domain + "image/download/" + result[i]);
+            }
+
+        }
+    };
+    wEditor.create();
+}
+
+//加载贴士
+function loadTip() {
+    var tipId = $('#tipIdInput').val();
+    if (tipId != "") {
+        httpRequest("/tip/query", {"tip_id": tipId}, function (data) {
+            var map = data[0];
+            tip_id = map.id;
+            $('#title').val(map.title);
+            $('#summary').val(map.summary);
+            wEditor.txt.html(map.content);
+        }, function (data) {
+
+        }, function (data) {
         });
     }
 
 }
 
-/**
- * 跳转到章节详情页面
- * @param that
- */
-function openNovelDetail(that) {
-    window.open("chapter.html?healthylife=" + $(that).attr("id"));
-}
-
-/**
- * 跳转到章节详情页面
- * @param that
- */
-function openSearch(that) {
-    window.open("search.html");
-}
-
-/**
- *
- * 章节详情页面
- *
- */
-
-var url_load_chapter_detail = "/healthylife/chapter/detail";
-var url_load_chapter_list = "/healthylife/chapter/list";
-var current_param = "";
-var current_chapter_data;
-var current_chapter_page_no = 1;
-
-var div = "<div class=\"div\"></div>";
-var is_show_alert = false;
-
-var body_parent_container = "<div class=\"body-parent-container-chapter\"></div>";
-
-function onRecieveChapterLoad() {
-    var param = window.location.search;
-    current_param = param.substr(1,param.length);
-    onload(current_param+"&chapter=" + current_chapter_page_no);
-}
-
-/**
- * 加载章节详情
- * @param param
- */
-function onload(param) {
-    httpRequest("GET",url_load_chapter_detail,param,function (data) {
-        $(".body-parent-container-chapter").remove();
-        console.log(JSON.stringify(data));
-        $("body").prepend(body_parent_container);
-        window.scroll(0,0);
-        $(".body-parent-container-chapter").prepend(data[0].chapter_content);
-        $(".body-parent-container-chapter").css("margin-bottom","90px");
-        $("title").text(data[0].chapter_name);
-        $("#chapter_name").text("当前阅读：" + data[0].chapter_name);
-        $("#chapter_name").css("font-weight","400");
-        $("#chapter_name").css("font-size","16px");
-        $("#chapter_name").css("margin-top","12px");
-
-        current_chapter_data = data;
-        current_chapter_page_no = data[0].chapter_id;
-        if (data[0].is_first_chapter == "yes") {
-            $("#foot-previous-page").css("color","#aaaaaa");
-            $("#foot-previous-page").children().text("已是第一章")
-        }else {
-            $("#foot-previous-page").css("color","#000000");
-            $("#foot-previous-page").children().text("上一章")
-        }
-        if (data[0].is_last_chapter == "yes") {
-            $("#foot-next-page").css("color","#aaaaaa");
-            $("#foot-next-page").children().text("已是最后一章")
-        }else {
-            $("#foot-next-page").css("color","#000000");
-            $("#foot-next-page").children().text("下一章")
-        }
-
-        $(".body-parent-container-chapter-list").css("display","none");
-        $(".body-parent-container-chapter").css("display","");
-        $("#paragraph-show-index").text("查看目录");
-        $(".body-parent-container-chapter-list").children().remove();
-        is_show_alert = false;
-    },function (data) {
-
-    },function (data) {
-
-    });
-}
-
-/**
- * 跳转到其他章节
- * @param that
- */
-function jumptochapter(that) {
-    var e = window.event;
-    if ($(that).attr("id") == "foot-previous-page") {
-        if (current_chapter_data[0].is_first_chapter== "yes") {
-
-        } else {
-            current_chapter_page_no = current_chapter_page_no-1;
-            onRecieveChapterLoad();
-        }
-    } else if ($(that).attr("id") == "foot-next-page") {
-        if (current_chapter_data[0].is_last_chapter== "yes") {
-
-        } else {
-            current_chapter_page_no = parseInt(current_chapter_page_no)+1;
-            onRecieveChapterLoad();
-        }
-
-    } else {
-        current_chapter_page_no = parseInt($(that).attr("id"));
-        onRecieveChapterLoad();
-    }
-}
-
-/**
- * 显示小说目录
- */
-
-var saved_scrollTop = 0;
-var data_chapter;
-function showchapteralert() {
-    if (is_show_alert == false) {//未显示目录时
-        saved_scrollTop = $(document).scrollTop();
-        $(".body-parent-container-chapter-list").css("display","");
-        $(".body-parent-container-chapter").css("display","none");
-        $("#paragraph-show-index").text("返回");
-        if (data_chapter == null) {
-            onLoadChapterList();
-        } else {
-            for (var i = 0;i<data_chapter.length;i++) {
-                var indent = data_chapter[i].chapter_grade-1;
-                var text_color = "#000";
-                if (indent != 0){
-                    text_color = "#333";
-                }
-                $(".body-parent-container-chapter-list").append("<div class=\"div\" id=\"" + data_chapter[i].id +"\"" +
-                    " onclick=\"jumptochapter(this)\"><p" +
-                    " class=\"p-chapter-list\" style='margin-left: " + indent + "em;color: " + text_color +"'" + ">" + data_chapter[i].chapter_name + "</p></div>")
+//更新贴士
+function updateTip() {
+    var id = $("#tipIdInput").val();
+    var tilte = $("#title").val();
+    var summary = $("#summary").val();
+    var content = wEditor.txt.html();
+    if (id != "" && tilte != "" && summary != "" && content != "<p><br></p>") {
+        var param = {"tip_id": id, "title": tilte, "summary": summary, "content": content};
+        httpRequest("/tip/update", param, function (data) {
+            $('#id').val("");
+            $('#title').val("");
+            $('#summary').val("");
+            wEditor.txt.html("<p><br></p>");
+        }, function (data) {
+            if (data.status == "too_long") {
+                alert("修改失败，标题/简介/内容太长");
+            } else if (data.status == "too_short") {
+                alert("修改失败，标题/简介/内容为空");
+            } else if (data.status == "fail") {
+                alert("修改失败");
+            } else if (data.status == "success") {
+                alert("修改成功");
+            } else if (data.status == "illegal") {
+                alert("修改失败，含有非法字符");
             }
-            $(".body-parent-container-chapter-list").css("display","");
-            var current_scrollTop = 0;
-            var page_no = current_chapter_page_no;
-            $("div#" + page_no).css("font-weight:bold");
-            current_scrollTop = $("div#" + page_no).last().offset().top-46;
-            window.scrollTo(0,current_scrollTop);
-        }
-    }else {//正在显示目录时
-        $(".body-parent-container-chapter-list").css("display","none");
-        $(".body-parent-container-chapter").css("display","");
-        $("#paragraph-show-index").text("查看目录");
-        $(".body-parent-container-chapter-list").children().remove();
-        window.scroll(0,saved_scrollTop);
-    }
-    is_show_alert = !is_show_alert;
-}
-
-/**
- * 加载显示目录
- */
-function onLoadChapterList() {
-    httpRequest("GET",url_load_chapter_list,current_param, function (data) {
-        data_chapter = data;
-        for (var i = 0;i<data.length;i++) {
-            var indent = data[i].chapter_grade-1;
-            var text_color = "#000";
-            if (indent != 0){
-                text_color = "#333";
-            }
-            $(".body-parent-container-chapter-list").append("<div class=\"div\" id=\"" + data[i].id +"\"" +
-                " onclick=\"jumptochapter(this)\"><p" +
-                " class=\"p-chapter-list\" style='margin-left: " + indent + "em;color: " + text_color +"'" + ">" + data[i].chapter_name + "</p></div>")
-        }
-        $(".body-parent-container-chapter-list").css("display","");
-        var current_scrollTop = 0;
-        var page_no = current_chapter_page_no;
-        console.log(page_no);
-        $("div#" + page_no).css("font-weight:bold");
-        current_scrollTop = $("div#" + page_no).last().offset().top-56;//定位到在读章节
-        window.scrollTo(0,current_scrollTop);
-    },function (data) {
-
-    },function (data) {
-
-    });
-}
-
-//搜索
-var url_search = "/search";
-function onLoadSearchResult() {
-    var keyword = $("#search").val();
-    console.log("keyword:" + keyword);
-    if (keyword == "") {
-
-    }else if (keyword.search("'") != -1) {
-
-    }else if (keyword.search("--") != -1) {
-
-    }else if (keyword.search("#") != -1) {
-
-    } else {
-        var param = "keyword=" + keyword;
-        httpRequest("GET",url_search,param,function (data) {
-            $(".body-container").remove();
-            var str = "";
-            for (var i = 0;i < data.length;i++) {
-                if (data[i].type != "author") {
-                    str = str +
-                        "<div class='body-container' id='" + data[i].id + "' onclick='openNovelDetail(this)'>" +
-                            "<div class='container_img_cover'>" +
-                                "<img class='img_cover' src='data:image/jpeg;base64," + data[i].cover + "' >" +
-                            "</div>" +
-                            "<div class='div_book_info'>" +
-                                "<p class=\"p-body-bookname\">" + data[i].name + "</p>" +
-                            "</div>" +
-                        "</div>";
-                }
-            }
-            $(".body-parent-container").append(str);
-        },function (data) {
-
-        },function (data) {
-
+        }, function (data) {
         });
+    } else {
     }
 }
 
+//创建贴士
+function addTip() {
+    var tilte = $("#title").val();
+    var summary = $("#summary").val();
+    var content = wEditor.txt.html();
+    if (tilte != "" && summary != "" && content != "<p><br></p>") {
+        var param = {"title": tilte, "summary": summary, "content": content};
+        httpRequest("/tip/add", param, function (data) {
+            var id = data[0].id;
+            alert("创建成功，ID为" + id);
+            $("#title").val("");
+            $("#summary").val("");
+            wEditor.txt.html("<p><br></p>");
+        },function (data) {
+            if (data.status = "too_long") {
+                alert("创建失败，标题/简介/内容太长");
+            } else if (data.status == "too_short") {
+                alert("创建失败，标题/简介/内容为空");
+            } else if (data.status == "fail") {
+                alert("创建失败");
+            }
+        },function (data) {
+        });
+    } else {
+    }
+}
 
 /**
- * 公共模块
+ * 网络请求
  * @param method
  * @param url
  * @param param
@@ -295,12 +294,13 @@ function onLoadSearchResult() {
  * @param successDic
  * @param error
  */
-function httpRequest(method,url,param,successArr,successDic,error) {
+function httpRequest(url, param, successArr, successDic, error) {
     $.ajax({
-        type: method,
-        contentType: 'application/json;charset=UTF-8',
-        url: url + "?" + param,
+        type: 'post',
+        data: param,
+        url: url,
         success: function (result) {
+            console.log(result);
             var data = JSON.parse(result);
             if (result.startsWith("{", 0)) {
                 successDic(data);
@@ -309,7 +309,6 @@ function httpRequest(method,url,param,successArr,successDic,error) {
             } else {
                 error(result);
             }
-
         },
         error: function (e) {
         }

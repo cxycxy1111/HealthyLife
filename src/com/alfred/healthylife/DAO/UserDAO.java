@@ -152,7 +152,7 @@ public class UserDAO extends DAO{
         int location = (page_no - 1) * num_limit;
         String sql = "SELECT * FROM user " +
                 "WHERE del IN (" + del + ") AND locked IN (" + locked + ") " +
-                "ORDER BY id DESC LIMIT" + location + "," + num_limit;
+                "ORDER BY id DESC LIMIT " + location + "," + num_limit;
         return helper.query(sql);
     }
 

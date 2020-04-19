@@ -66,4 +66,16 @@ public class TipTagRelDAO extends DAO {
         return helper.query(sql);
     }
 
+    public ArrayList<HashMap<String, Object>> simpleQueryByTip(long tip_id) {
+        String sql = "SELECT * FROM tip_tag a " +
+                "WHERE del=0 AND tip_id=" + tip_id;
+        return helper.query(sql);
+    }
+
+    public ArrayList<HashMap<String, Object>> simpleQueryByTipWithDeleted(long tip_id) {
+        String sql = "SELECT * FROM tip_tag a " +
+                "WHERE tip_id=" + tip_id;
+        return helper.query(sql);
+    }
+
 }

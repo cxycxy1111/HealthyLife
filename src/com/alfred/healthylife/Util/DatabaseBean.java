@@ -21,7 +21,9 @@ public class DatabaseBean implements Serializable {
             "characterEncoding=utf8&" +
             "useOldAliasMetadataBehavior=true&" +
             "ssl_mode=disabled&" +
-            "useSSL=false";
+            "useSSL=false&" +
+            "zeroDateTimeBehavior=convertToNull&" +
+            "serverTimezone=UTC";
     private static final String USER = "root";
     private static final String PASSWORD = Config.getDatabasePassword();
     private static DataSource ds;

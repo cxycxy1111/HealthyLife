@@ -1,310 +1,49 @@
-.head-parent-container {
-    top: 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    align-items: center;
-    position: fixed;
-    width: calc(100% - 60px);
-    margin: 0;
-    border-bottom: 1px solid #eeeeee;
-    background-color: #ffffff;
-    overflow-x: scroll;
-}
-
-#head-parent-container {
-    top: 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    align-items: center;
-    position: fixed;
-    width: 100%;
-    margin: 0;
-    border-bottom: 1px solid #eeeeee;
-    background-color: #ffffff;
-    overflow-x: scroll;
-}
-
-
-#container_search {
-    background-color: #ffffff;
-    border-bottom: 1px solid #eeeeee;
-    border-left: 1px solid #eeeeee;
-    width: 60px;
-    position: fixed;
-    top: 0;
-    right: 0;
-}
-
-#paragraph_search {
-    margin: 10px;
-    font-size: 15px;
-}
-
-#search {
-    font-size: 15px;
-    height: 40px;
-    margin: 0 20px 0 20px;
-    border: 0;
-    width: 100%;
-    padding: 1px;
-}
-
-.div-load-more {
-
-}
-
-.p-load-more {
-    text-align: center;
-    padding: 10px;
-    background-color: #eeeeee;
-    border-radius: 5px;
-    margin-top: 52px;
-    margin-bottom: 10px;
-}
-
-.head-tab-paragraph {
-    display: block;
-    flex-shrink: 0;
-    flex-grow: 0;
-    font-size: 15px;
-    margin: 10px 10px 10px 10px;
-    font-weight: 400;
-    color: #111111
-}
-
-
-.body-parent-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    position: relative;
-    justify-content: space-evenly;
-    margin-top: 52px;
-    margin-bottom: 72px;
-}
-
-.body-parent-container-chapter {
-    position: relative;
-    top: 42px;
-    bottom: 0;
-    margin: 10px;
-}
-
-.body-container {
-    width: 120px;
-    margin-left: 0;
-    margin-right: 0;
-}
-
-.body-parent-container-chapter-list {
-    position: relative;
-    top: 42px;
-    bottom: 0;
-    margin: 10px 10px 96px 10px;
-}
-
-.container_img_cover {
-    width: 100%;
-    height: 140px;
-}
-
-img.img_cover {
-    margin-left: 20px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    width: 80px;
-    box-shadow: 2px 2px 4px 2px rgba(0,0,0,0.1);
-}
-
-.div_book_info {
-    display: block;
-}
-
-.p-body-bookname {
-    display: block;
-    margin-left: 5px;
-    margin-right: 5px;
-    margin-bottom: 15px;
-    margin-top: 0;
-    font-size: 14px;
-    text-align: center;
-}
-
-.p-body-info {
-    margin: 5px 0;
-    font-size: 14px;
-    color: gray;
-}
-
-.foot-parent-container {
-    position: fixed;
-    border-top: 1px solid #eeeeee;
-    bottom: 0;
-    height: 40px;
-    width: 100%;
-    background-color: white;
-    margin: 0 auto 0 auto;
-}
-
-.foot-cointainer {
-    display: block;
-    float: left;
-    text-align: center;
-    height: 40px;
-    margin: auto 0 auto 0;
-    width: calc(100%/3);
-}
-
-.paragraph-foot {
-    display: inline-block;
-    height: 40px;
-    margin: 8px 0 0;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.alert_window {
-    position: absolute;
-    overflow-y: scroll;
-    width: 90%;
-    height: calc(100% - 100px - 40px);
-    left: 5%;
-    background-color: #ffffff;
-    border-top: 1px solid #eeeeee;
-    border-left: 1px solid #eeeeee;
-    border-right: 1px solid #eeeeee;
-    border-top-left-radius: 2px;
-    border-top-right-radius: 2px;
-    top: 100px;
-    bottom: 100px;
-}
-
-.p-chapter-list {
-    margin: 10px;
-}
-
-.div {
-    width: 100%;
-    border-bottom: 1px solid #eeeeee;
-    background-color: #ffffff;
-}
-
-.alert_window_background {
-    position: absolute;
-    width: 100%;
-    height: calc(100% - 40px);
-    left: 0;
-    background-color: #111111;
-    opacity: 0.8;
-    bottom: 40px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 15px;
-}
-
-tr {}
-
-td {
-    border: 1px solid gray;
-    text-align: center;
-}
-
-h1,h2,h3,h4,h5,h6 {
-    font-family: "Songti SC","PingFangSC-Regular", "Microsoft Yahei";
-    text-align: center;
-    color: black;
-}
-
-h1 {
-    font-size: 31px;
-}
-
-h2 {
-    font-size: 29px;
-}
-
-h3 {
-    font-size: 27px;
-}
-
-h4 {
-    font-size:25px;
-}
-
-h5 {
-    font-size:23px;
-}
-
-h6 {
-    font-size:21px;
-}
-
-p {
-    font-size: 17px;
-    text-align: justify;
-}
-
-img {
-    width: 80%;
-    margin-left: 10%;
-}
-
-ol {
-    text-indent: 0;
-    margin: 10px auto;
-}
-
-li {
-    line-height: 24px;
-}
-
-blockquote {
-    background-color: #f2f2f2;
-    margin-left: 0.5em;
-    margin-top: 0;
-    margin-bottom: 0;
-    margin-right: 0.5em;
-    padding: 0.25em 0.5em 0.25em 0.5em;
-    border-radius: 0.5em;
-}
-
-blockquote > p {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-}
-
-.special-paragraph {
-    font-family: "Songti SC",SimHei,"PingFangSC-Regular", "Microsoft Yahei";
-}
-.img-quote,.chart-quote,.table-quote {
-    width: 80%;
-    margin-left: 10%;
-    color: darkgray;
-    text-align: center;
-    font-size: 15px;
-    text-indent: 0;
-}
-
-.img-title,.chart-title,.table-title {
-    font-weight: 600;
-    text-align: center;
-    font-size: 15px;
-}
-
-.body-parent-container-chapter > p:not(.special-paragraph):not(.img-title):not(.img-quote):not(.chart-title):not(.chart-quote):not(.table-title):not(.table-quote){
-    text-indent: 2em;
-    font-size: 21px;
-    line-height: 40px;
-    font-family: "Songti SC",SimHei,"PingFangSC-Regular", "Microsoft Yahei";
+html, body {
+    height: 100%;
 }
 
 body {
     margin: 0;
-    font-family: Helvetica, Arial,"Microsoft Yahei",SimHei, sans-serif;
+    font-family: "Microsoft Yahei", "PingFangSC-Regular";
+}
+
+.left-div-container {
+    display: inline-block;
+    float: left;
+    background-color: #535353;
+    width: 100px;
+    height: 100%;
+}
+
+.right-div-container {
+    display: inline-block;
+    float: right;
+    margin-right: 40px;
+    width: calc(100% - 340px);
+}
+
+.center-div-container {
+    display: inline-block;
+    margin-bottom: 0;
+    background-color: #efefef;
+    width: 200px;
+    height: 100%;
+}
+
+.sub-div-container {
+    display: block;
+    margin: 0;
+    padding: 16px;
+}
+
+.p-left-container {
+    color: #ffffff;
+    display: inline-block;
+    margin: 0;
+}
+
+.p-center-container {
+    color: #000000;
+    display: inline-block;
+    margin: 0;
 }

@@ -27,6 +27,35 @@ public class TipDAO extends DAO{
     }
 
     /**
+     * 查询帖子列表
+     *
+     * @param del
+     * @param page_no
+     * @param num_lmt
+     * @return
+     */
+    public ArrayList<HashMap<String, Object>> query(String del, int page_no, int num_lmt) {
+        int location = (page_no - 1) * num_lmt;
+        String sql = "SELECT id,title,summary FROM tip a " +
+                "WHERE del IN (" + del + ") " +
+                "ORDER BY id desc LIMIT " + location + "," + num_lmt;
+        return helper.query(sql);
+    }
+
+    /**
+     * 查询帖子列表
+     *
+     * @param del
+     * @return
+     */
+    public ArrayList<HashMap<String, Object>> query(String del) {
+        String sql = "SELECT id,title,summary FROM tip a " +
+                "WHERE del IN (" + del + ") " +
+                "ORDER BY favourite_count DESC";
+        return helper.query(sql);
+    }
+
+    /**
      * 通过关键字查询标题
      * @param keywords
      * @return
@@ -50,10 +79,10 @@ public class TipDAO extends DAO{
      * @param creator_type
      * @return
      */
-    public long create(String title, String tag, String summary, String content, String create_time, long creator,
+    public long create(String title, String summary, String content, String create_time, long creator,
                        int creator_type) {
-        String sql = "INSERT INTO tip (title,tag,summary,content,create_time,last_modify_time,creator,creator_type) VALUES" +
-                        " ('" + title + "','" + tag + "','" + summary + "','" + content + "','" + create_time + "','" +
+        String sql = "INSERT INTO tip (title,summary,content,create_time,last_modify_time,creator,creator_type) VALUES" +
+                " ('" + title + "','" + summary + "','" + content + "','" + create_time + "','" +
                         create_time + "'," + creator + "," + creator_type + ")";
         try {
             return helper.insert(sql);
@@ -101,10 +130,29 @@ public class TipDAO extends DAO{
      * @param last_modify_time
      * @return
      */
-    public boolean update(long id,String summary,String content,String last_modify_time) {
-        String sql =
-                "UPDATE tip SET summary='" + summary + "',content='" + content + "',last_modify_time='" + last_modify_time
-                        + "' WHERE id=" + id;
+    public boolean update(long id, String title, String summary, String content, String last_modify_time) {
+        String sql = "UPDATE tip SET title='" + title + "',summary='" + summary + "',content='" + content + "'," +
+                "last_modify_time= '" + last_modify_time + "' WHERE id=" + id;
+
+        try {
+            return helper.update(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 更新帖子
+     *
+     * @param id
+     * @param summary
+     * @param last_modify_time
+     * @return
+     */
+    public boolean update(long id, String title, String summary, String last_modify_time) {
+        String sql = "UPDATE tip SET title='" + title + "',summary='" + summary + "'," +
+                "last_modify_time= '" + last_modify_time + "' WHERE id=" + id;
 
         try {
             return helper.update(sql);

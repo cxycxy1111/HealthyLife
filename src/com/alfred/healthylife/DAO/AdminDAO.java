@@ -25,7 +25,7 @@ public class AdminDAO extends DAO{
      */
     public ArrayList<HashMap<String,Object>> queryAdmins(String del,String locked,int page_no,int num_limit) {
         int location = (page_no - 1)*num_limit;
-        String sql = "SELECT id,nick_name FROM admin " +
+        String sql = "SELECT id,nick_name,email FROM admin " +
                 "WHERE del IN (" + del + ") AND locked IN (" + locked +") " +
                 "ORDER BY id DESC " +
                 "LIMIT " + location + "," + num_limit;

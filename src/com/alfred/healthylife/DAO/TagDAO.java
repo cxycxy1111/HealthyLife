@@ -68,7 +68,7 @@ public class TagDAO extends DAO{
      * @return
      */
     public boolean update(long id,String title) {
-        String sql = "UPDATE tag SET title = " + title + "' " +
+        String sql = "UPDATE tag SET title = '" + title + "' " +
                 "WHERE id=" + id;
         try {
             return helper.update(sql);
@@ -103,6 +103,29 @@ public class TagDAO extends DAO{
     public ArrayList<HashMap<String, Object>> query(String title) {
         String sql = "SELECT * FROM tag " +
                 "WHERE title='" + title + "'";
+        return helper.query(sql);
+    }
+
+    /**
+     * 通过标题查询标签
+     *
+     * @param id
+     * @return
+     */
+    public ArrayList<HashMap<String, Object>> query(long id) {
+        String sql = "SELECT * FROM tag " +
+                "WHERE id=" + id;
+        return helper.query(sql);
+    }
+
+    /**
+     * 查询
+     *
+     * @return
+     */
+    public ArrayList<HashMap<String, Object>> query() {
+        String sql = "SELECT * FROM tag " +
+                "WHERE del = 0";
         return helper.query(sql);
     }
 

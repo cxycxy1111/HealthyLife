@@ -22,5 +22,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Tomcat 9.0.0.M261" level="application_server_libraries" />
     <orderEntry type="library" exported="" name="json" level="project" />
     <orderEntry type="library" exported="" name="tomcat" level="project" />
+    <orderEntry type="library" name="elasticsearch" level="project" />
   </component>
 </module>

@@ -116,6 +116,7 @@ public class SQLHelper {
      * @return boolean 成功返回true，失败返回false
      */
     public boolean update(String sql) throws SQLException {
+        System.out.println(sdf.format(new Date()) + ",SQL:" + sql);
         boolean b = false;
         if(sql.equals("") || sql == null){
             return b;
@@ -141,6 +142,7 @@ public class SQLHelper {
      * @return boolean 成功返回true，失败返回false
      */
     public long insert(String sql) throws SQLException {
+        System.out.println(sdf.format(new Date()) + ",SQL:" + sql);
         boolean b = false;
         long id = 0;
         if (sql.equals("") || sql == null) {

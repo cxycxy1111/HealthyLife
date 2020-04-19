@@ -94,6 +94,20 @@ public class Util {
     }
 
     /**
+     * 从键值对中取出值转化为boolean
+     *
+     * @param map
+     * @param key
+     * @return
+     */
+    public static boolean getBoolFromMap(HashMap<String, Object> map, String key) {
+        Object o = map.get(key);
+        String s = String.valueOf(o);
+        boolean b = Boolean.valueOf(s);
+        return b;
+    }
+
+    /**
      * 从集合中取出值转化为String
      * @param list
      * @param key
@@ -201,11 +215,11 @@ public class Util {
      * @param icon_name 文件名
      * @return
      */
-    public static String readImage(String icon_name, String path) {
+    public static String readImage(String icon_name, String path, String suffix) {
         InputStream in = null;
         byte[] data = null;
         try {
-            in = new FileInputStream(path + icon_name + ".png");
+            in = new FileInputStream(path + icon_name + "." + suffix);
             data = new byte[in.available()];
             in.read(data);
             in.close();
@@ -250,7 +264,7 @@ public class Util {
      *@param filename 图片名
      *
      */
-    public static void writeImage(String imgStr, String filename, String path) {
+    public static void writeImage(String imgStr, String filename, String path, String suffix) {
         if (imgStr != null) {
             BASE64Decoder decoder = new BASE64Decoder();
             try {
@@ -260,7 +274,7 @@ public class Util {
                         b[i] += 256;
                     }
                 }
-                String imgFilePath = path + filename + ".png";
+                String imgFilePath = path + filename + "." + suffix;
                 OutputStream out = new FileOutputStream(imgFilePath,false);
                 out.write(b);
                 out.flush();
@@ -279,6 +293,15 @@ public class Util {
     public static String getCurrentTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(new Date());
+    }
+
+    /**
+     * 获取当前时间
+     *
+     * @return
+     */
+    public static long getCurrentTimeStamp() {
+        return System.currentTimeMillis();
     }
 
     /**

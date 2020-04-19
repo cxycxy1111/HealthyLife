@@ -66,6 +66,7 @@ public class TipLogDAO extends DAO{
      * @param creator_type
      */
     public void update(long tip_id,String content,String create_time,long creator,int creator_type) {
+
         create(tip_id,2,content,create_time,creator,creator_type);
     }
 }

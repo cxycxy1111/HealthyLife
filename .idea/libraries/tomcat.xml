@@ -33,6 +33,8 @@
       <root url="jar:///usr/local/tomcat/lib/tomcat-util.jar!/" />
       <root url="jar:///usr/local/tomcat/lib/tomcat-websocket.jar!/" />
       <root url="jar:///usr/local/tomcat/lib/websocket-api.jar!/" />
+      <root url="jar://$USER_HOME$/develop/lib/server/commons-io-2.6.jar!/" />
+      <root url="jar://$USER_HOME$/develop/lib/server/commons-fileupload-1.4.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar:///usr/local/tomcat/lib/gson-2.8.2-javadoc.jar!/" />
