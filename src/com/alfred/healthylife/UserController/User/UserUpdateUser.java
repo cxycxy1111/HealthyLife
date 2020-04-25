@@ -1,7 +1,6 @@
 package com.alfred.healthylife.UserController.User;
 
-import com.alfred.healthylife.AdminController.BaseServlet;
-import com.alfred.healthylife.AdminService.UserService;
+import com.alfred.healthylife.UserController.BaseServlet;
 import com.alfred.healthylife.UserService.UUserUService;
 import com.alfred.healthylife.Util.Util;
 

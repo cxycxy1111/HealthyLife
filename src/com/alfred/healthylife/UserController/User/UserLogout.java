@@ -1,7 +1,7 @@
 package com.alfred.healthylife.UserController.User;
 
-import com.alfred.healthylife.AdminController.BaseServlet;
 import com.alfred.healthylife.DAO.UserLogDAO;
+import com.alfred.healthylife.UserController.BaseServlet;
 import com.alfred.healthylife.Util.Util;
 
 import javax.servlet.ServletException;

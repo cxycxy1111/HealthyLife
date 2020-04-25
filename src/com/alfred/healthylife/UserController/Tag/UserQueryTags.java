@@ -1,7 +1,7 @@
 package com.alfred.healthylife.UserController.Tag;
 
-import com.alfred.healthylife.AdminController.BaseServlet;
 import com.alfred.healthylife.AdminService.TagService;
+import com.alfred.healthylife.UserController.BaseServlet;
 import com.alfred.healthylife.Util.Util;
 
 import javax.servlet.ServletException;

@@ -1,6 +1,6 @@
 package com.alfred.healthylife.UserController.Tip;
 
-import com.alfred.healthylife.AdminController.BaseServlet;
+import com.alfred.healthylife.UserController.BaseServlet;
 import com.alfred.healthylife.UserService.UUserTipRelService;
 import com.alfred.healthylife.Util.Util;
 
