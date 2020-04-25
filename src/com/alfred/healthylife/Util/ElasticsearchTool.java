@@ -6,6 +6,7 @@ import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
@@ -13,6 +14,8 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.SearchHit;
@@ -106,7 +109,7 @@ public class ElasticsearchTool {
      * @param queryBuilder
      * @return
      */
-    static String listSearchResult(QueryBuilder queryBuilder, int from) {
+    public static String listSearchResult(QueryBuilder queryBuilder, int from) {
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.from(from);
         searchSourceBuilder.size(LENGTH);
@@ -150,14 +153,60 @@ public class ElasticsearchTool {
      *
      * @param id
      * @param title
+     * @param summary
+     * @param del
      * @throws IOException
      */
-    public void updateDocument(long id, String title) throws IOException {
+    public static void updateDocument(long id, String title, String summary, int del) throws IOException {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("id", String.valueOf(id));
         hashMap.put("title", title);
+        hashMap.put("summary", summary);
+        hashMap.put("del", del);
         UpdateRequest updateRequest = new UpdateRequest(ES_NAME, String.valueOf(id));
-        updateRequest.doc(JSON.toJSONString(hashMap), XContentType.JSON);
+        updateRequest.doc(hashMap);
+        restHighLevelClient().update(updateRequest, RequestOptions.DEFAULT);
+    }
+
+    /**
+     * 升级文档，不更新DEL字段
+     *
+     * @param id
+     * @param title
+     * @param summary
+     * @throws IOException
+     */
+    public static void updateDocumentWithoutDelete(long id, String title, String summary) throws IOException {
+        XContentBuilder builder = XContentFactory.jsonBuilder();
+        builder.startObject();
+        {
+            builder.field("id", id);
+            builder.field("title", title);
+            builder.field("summary", summary);
+        }
+        builder.endObject();
+        UpdateRequest updateRequest = new UpdateRequest(ES_NAME, String.valueOf(id));
+        updateRequest.doc(builder);
+        restHighLevelClient().update(updateRequest, RequestOptions.DEFAULT);
+    }
+
+    /**
+     * 升级文档，只更新DEL字段
+     *
+     * @param id
+     * @param del
+     * @throws IOException
+     */
+    public static void updateDocumentWithDelete(long id, int del) throws IOException {
+        XContentBuilder builder = XContentFactory.jsonBuilder();
+        builder.startObject();
+        {
+            builder.field("id", id);
+            builder.field("del", del);
+        }
+        builder.endObject();
+        UpdateRequest updateRequest = new UpdateRequest(ES_NAME, String.valueOf(id));
+        updateRequest.doc(builder);
         restHighLevelClient().update(updateRequest, RequestOptions.DEFAULT);
     }
 
@@ -167,16 +216,26 @@ public class ElasticsearchTool {
      * @param list
      * @throws IOException
      */
-    public void bulkRequest(ArrayList<HashMap<String, Object>> list) throws IOException {
+    public static void bulkRequest(ArrayList<HashMap<String, Object>> list) throws IOException {
         BulkRequest bulkRequest = new BulkRequest();
         for (int i = 0; i < list.size(); i++) {
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap = list.get(i);
-            bulkRequest.add(new IndexRequest(ES_NAME)
+
+            XContentBuilder builder = XContentFactory.jsonBuilder();
+            builder.startObject();
+            builder.field("id", Util.getIntFromMap(hashMap, "id"))
+                    .field("title", hashMap.get("title"))
+                    .field("summary", hashMap.get("summary"))
+                    .field("del", Util.getIntFromMap(hashMap, "del"));
+            builder.endObject();
+
+            IndexRequest indexRequest = new IndexRequest(ES_NAME)
                     .id(String.valueOf(hashMap.get("id")))
-                    .source(JSON.toJSONString(hashMap), XContentType.JSON));
+                    .source(builder);
+            bulkRequest.add(indexRequest);
         }
-        BulkResponse bulkResponse = restHighLevelClient().bulk(bulkRequest, RequestOptions.DEFAULT);
+        restHighLevelClient().bulk(bulkRequest, RequestOptions.DEFAULT);
     }
 
     /**
@@ -185,7 +244,7 @@ public class ElasticsearchTool {
      * @param id
      * @throws IOException
      */
-    public boolean isExistDocument(long id) throws IOException {
+    public static boolean isExistDocument(long id) throws IOException {
         GetRequest getRequest = new GetRequest("index1", String.valueOf(id));
         getRequest.fetchSourceContext(new FetchSourceContext(false));
         getRequest.storedFields("_none_");

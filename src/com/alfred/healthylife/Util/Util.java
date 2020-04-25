@@ -65,7 +65,20 @@ public class Util {
     }
 
     /**
-     * 从集合中取出值转为long
+     * 从映射中取出值转为int
+     * @param map
+     * @param key
+     * @return
+     */
+    public static int getIntFromMap(HashMap<String, Object> map, String key) {
+        Object o = map.get(key);
+        String s = String.valueOf(o);
+        int i = Integer.parseInt(s);
+        return i;
+    }
+
+    /**
+     * 从链表中取出值转为long
      * @param list
      * @param key
      * @return
@@ -73,6 +86,19 @@ public class Util {
     public static long getLongFromMapList(ArrayList<HashMap<String,Object>> list, String key) {
         HashMap<String,Object> map = new HashMap<String,Object>();
         map = list.get(0);
+        Object o = map.get(key);
+        String s = String.valueOf(o);
+        return Long.parseLong(s);
+    }
+
+    /**
+     * 从映射中取出值转为long
+     *
+     * @param map
+     * @param key
+     * @return
+     */
+    public static long getLongFromMap(HashMap<String, Object> map, String key) {
         Object o = map.get(key);
         String s = String.valueOf(o);
         return Long.parseLong(s);
@@ -115,6 +141,18 @@ public class Util {
      */
     public static String getStringFromMapList(ArrayList<HashMap<String,Object>> list, String key) {
         HashMap<String,Object> map = list.get(0);
+        Object o = map.get(key);
+        return String.valueOf(o);
+    }
+
+    /**
+     * 从集合中取出值转化为String
+     *
+     * @param map
+     * @param key
+     * @return
+     */
+    public static String getStringFromMap(HashMap<String, Object> map, String key) {
         Object o = map.get(key);
         return String.valueOf(o);
     }
@@ -184,12 +222,31 @@ public class Util {
     }
 
     /**
+     * 读取贴士内容
+     *
+     * @param id
+     * @return
+     */
+    public static String readTipContent(long id) {
+        return readTxtFile("/usr/local/HealthyLife/TipContent/" + id + ".txt");
+    }
+
+    /**
+     * 写入贴士内容
+     *
+     * @param id
+     * @param content
+     */
+    public static void writeTipContent(long id, String content) {
+        writeTxtFile("/usr/local/HealthyLife/TipContent/" + id + ".txt", content,false);
+    }
+
+    /**
      * 读取文件
      * @param path 文件路径
      * @return 内容
      */
-    public static String readTxtFile(String path) {
-        String re = "";
+    private static String readTxtFile(String path) {
         //得到数据文件
         File file = new File(path);
         StringBuilder builder = new StringBuilder();
@@ -211,7 +268,36 @@ public class Util {
     }
 
     /**
+     * 写入文件
+     * @param path 文件路径
+     * @param content 内容
+     */
+    private static void writeTxtFile(String path, String content, boolean append) {
+        File file = new File(path);
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            FileWriter fw = new FileWriter(file, append);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(content);
+            bw.flush();
+            bw.close();
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 获取图标
+     *
      * @param icon_name 文件名
      * @return
      */
@@ -228,34 +314,6 @@ public class Util {
         }
         BASE64Encoder encoder = new BASE64Encoder();
         return encoder.encode(data);
-    }
-
-    /**
-     * 写入文件
-     * @param path 文件路径
-     * @param content 内容
-     */
-    public static void writeTxtFile(String path, String content) {
-        File file = new File(path);
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-        }
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            FileWriter fw = new FileWriter(file, true);
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(content);
-            bw.flush();
-            bw.close();
-            fw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**

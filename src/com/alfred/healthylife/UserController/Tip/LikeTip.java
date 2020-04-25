@@ -1,7 +1,8 @@
-package com.alfred.healthylife.AdminController.User;
+package com.alfred.healthylife.UserController.Tip;
 
 import com.alfred.healthylife.AdminController.BaseServlet;
-import com.alfred.healthylife.DAO.UserLogDAO;
+import com.alfred.healthylife.UserService.UTipService;
+import com.alfred.healthylife.UserService.UUserTipRelService;
 import com.alfred.healthylife.Util.Util;
 
 import javax.servlet.ServletException;
@@ -12,8 +13,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "UserLogout", urlPatterns = "/user/logout")
-public class UserLogout extends BaseServlet {
+@WebServlet(name = "LikeTip", urlPatterns = "/user/tip/like")
+public class LikeTip extends BaseServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
@@ -25,14 +26,15 @@ public class UserLogout extends BaseServlet {
 
     protected void dealWithSessionAlive(HttpServletRequest request, HttpServletResponse response, HttpSession session
             , PrintWriter out, long current_user, int current_user_type) throws IOException {
-        UserLogDAO userLogDAO = new UserLogDAO();
-        userLogDAO.logout(current_user, Util.getCurrentTime(), current_user, current_user_type);
-        session.invalidate();
-        out.append(SUCCESS);
+        super.dealWithSessionAlive(request, response, session, out, current_user, current_user_type);
+        long id = Util.getLongFromRequest(request, "tip_id");
+        UUserTipRelService uUserTipRelService = new UUserTipRelService();
+        out.append(uUserTipRelService.addFavorite(current_user, id, Util.getCurrentTime()));
     }
 
     protected void dealWithSessionDead(HttpServletRequest request, HttpServletResponse response, PrintWriter out) throws IOException {
-        out.append(SUCCESS);
+        super.dealWithSessionDead(request, response, out);
     }
+
 
 }

@@ -1,7 +1,8 @@
-package com.alfred.healthylife.AdminController.Tip;
+package com.alfred.healthylife.UserController.User;
 
 import com.alfred.healthylife.AdminController.BaseServlet;
-import com.alfred.healthylife.AdminService.TipService;
+import com.alfred.healthylife.AdminService.UserService;
+import com.alfred.healthylife.UserService.UUserUService;
 import com.alfred.healthylife.Util.Util;
 
 import javax.servlet.ServletException;
@@ -12,8 +13,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "QueryTips", urlPatterns = "/tip/queryList")
-public class QueryTips extends BaseServlet {
+@WebServlet(name = "UserUpdateUser", urlPatterns = "/user/user/update")
+public class UserUpdateUser extends BaseServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
@@ -26,11 +27,10 @@ public class QueryTips extends BaseServlet {
     protected void dealWithSessionAlive(HttpServletRequest request, HttpServletResponse response, HttpSession session
             , PrintWriter out, long current_user, int current_user_type) throws IOException {
         super.dealWithSessionAlive(request, response, session, out, current_user, current_user_type);
-        String del = request.getParameter("del");
-        int page_no = Util.getIntFromRequest(request, "page_no");
+        String nick_name = request.getParameter("nick_name");
 
-        TipService tipService = new TipService();
-        out.append(tipService.query(del, page_no, 20));
+        UUserUService userService = new UUserUService();
+        out.append(userService.update(current_user, nick_name, Util.getCurrentTime(), current_user, current_user_type));
     }
 
     protected void dealWithSessionDead(HttpServletRequest request, HttpServletResponse response, PrintWriter out) throws IOException {

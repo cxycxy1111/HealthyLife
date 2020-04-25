@@ -1,7 +1,7 @@
-package com.alfred.healthylife.AdminController.User;
+package com.alfred.healthylife.UserController.User;
 
-import com.alfred.healthylife.AdminController.BaseServlet;
-import com.alfred.healthylife.AdminService.UserService;
+import com.alfred.healthylife.UserController.BaseServlet;
+import com.alfred.healthylife.UserService.UUserUService;
 import com.alfred.healthylife.Util.Util;
 
 import javax.servlet.ServletException;
@@ -33,7 +33,7 @@ public class UserLogin extends BaseServlet {
     protected void dealWithSessionDead(HttpServletRequest request, HttpServletResponse response, PrintWriter out) throws IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        UserService userService = new UserService();
+        UUserUService userService = new UUserUService();
         HashMap<String,Object> hashMap = new HashMap<>();
         hashMap = userService.loginCheck(email,password,Util.getIPAdress(request),Util.getCurrentTime());
         if (hashMap == null) {

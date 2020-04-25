@@ -2,6 +2,7 @@ package com.alfred.healthylife.UserController.Tip;
 
 import com.alfred.healthylife.AdminController.BaseServlet;
 import com.alfred.healthylife.AdminService.TipService;
+import com.alfred.healthylife.UserService.UTipService;
 import com.alfred.healthylife.Util.Util;
 
 import javax.servlet.ServletException;
@@ -28,14 +29,14 @@ public class QueryTip extends BaseServlet {
         super.dealWithSessionAlive(request, response, session, out, current_user, current_user_type);
         long id = Util.getLongFromRequest(request, "tip_id");
 
-        TipService tipService = new TipService();
-        out.append(tipService.query(id));
+        UTipService tipService = new UTipService();
+        out.append(tipService.query(id, current_user));
     }
 
     protected void dealWithSessionDead(HttpServletRequest request, HttpServletResponse response, PrintWriter out) throws IOException {
         long id = Util.getLongFromRequest(request, "tip_id");
-        TipService tipService = new TipService();
-        out.append(tipService.query(id));
+        UTipService tipService = new UTipService();
+        out.append(tipService.query(id, 0));
     }
 
 

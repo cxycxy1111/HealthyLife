@@ -1,6 +1,6 @@
 package com.alfred.healthylife.UserService;
 
-public class Service {
+public class UService {
 
     protected static final String prefix = "{\"status\":\"";
     protected static final String id_prefix = "{\"id\":";
@@ -21,7 +21,7 @@ public class Service {
     static final String SESSION_EXPIRED = prefix + "session_expired" + suffix;//session过期
     static final String AUTHORIZE_FAIL = prefix + "authorize_fail" + suffix;
 
-    public Service() {
+    public UService() {
 
     }
 

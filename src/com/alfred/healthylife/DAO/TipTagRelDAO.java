@@ -59,10 +59,11 @@ public class TipTagRelDAO extends DAO {
         return helper.query(sql);
     }
 
-    public ArrayList<HashMap<String, Object>> queryByTag(long tag_id) {
-        String sql = "SELECT b.title,b.summary FROM tip_tag a " +
+    public ArrayList<HashMap<String, Object>> queryByTag(long tag_id, int page_no, int num_lmt) {
+        int loc = (page_no - 1) * num_lmt;
+        String sql = "SELECT b.title,b.summary,b.id FROM tip_tag a " +
                 "LEFT JOIN tip b ON a.tip_id=b.id " +
-                "WHERE a.del=0 AND b.del=0 AND a.tag_id=" + tag_id;
+                "WHERE a.del=0 AND b.del=0 AND a.tag_id=" + tag_id + " LIMIT " + loc + "," + num_lmt;
         return helper.query(sql);
     }
 

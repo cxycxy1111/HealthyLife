@@ -79,6 +79,38 @@ public class TagDAO extends DAO{
     }
 
     /**
+     * 增加收藏数
+     *
+     * @param id
+     * @return
+     */
+    public void increaseFavouriteCount(long id) {
+        String sql = "UPDATE tag SET favourite_count=(SELECT i.favourite_count FROM (SELECT favourite_count FROM " +
+                "tag WHERE id=" + id + ") i)+1 WHERE id=" + id;
+        try {
+            helper.update(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 减少收藏数
+     *
+     * @param id
+     * @return
+     */
+    public void decreaseFavouriteCount(long id) {
+        String sql = "UPDATE tag SET favourite_count=(SELECT i.favourite_count FROM (SELECT favourite_count FROM " +
+                "tag WHERE id=" + id + ") i)-1 WHERE id=" + id;
+        try {
+            helper.update(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 通过页码查询标签
      * @param del
      * @param page_no

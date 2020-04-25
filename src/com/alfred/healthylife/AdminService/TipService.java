@@ -2,9 +2,12 @@ package com.alfred.healthylife.AdminService;
 
 import com.alfred.healthylife.DAO.TipDAO;
 import com.alfred.healthylife.DAO.TipLogDAO;
+import com.alfred.healthylife.Util.ElasticsearchEntrance;
 import com.alfred.healthylife.Util.Util;
+import com.sun.javafx.tools.packager.bundlers.RelativeFileSet;
 import org.elasticsearch.client.RestHighLevelClient;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -24,11 +27,19 @@ public class TipService extends Service{
      * @return
      */
     public String query(long id) {
-        return Util.transformFromCollection(tipDAO.query(id));
+        ArrayList<HashMap<String, Object>> list = new ArrayList<>();
+        list = tipDAO.query(id);
+        if (list.size() > 0) {
+            HashMap<String, Object> map = new HashMap<>();
+            map = list.get(0);
+            String content = Util.readTipContent(id);
+            map.put("content", content);
+        }
+        return Util.transformFromCollection(list);
     }
 
     /**
-     * 查询贴士详情
+     * 查询贴士列表
      *
      * @param del
      * @param page_no
@@ -37,36 +48,6 @@ public class TipService extends Service{
      */
     public String query(String del, int page_no, int num_lmt) {
         return Util.transformFromCollection(tipDAO.query(del, page_no, num_lmt));
-    }
-
-    /**
-     * 模糊查询
-     * @param keywords
-     * @return
-     */
-    public String query(String keywords) {
-        keywords = keywords.replace(","," ");
-        keywords = keywords.replace("，"," ");
-        keywords = keywords.replace("+"," ");
-        if (keywords.contains("|")) {
-            return ILLEGAL;
-        }else if (keywords.contains("'")) {
-            return ILLEGAL;
-        }
-        String[] keyword_list;
-        if (keywords.contains(" ")) {
-            keyword_list = keywords.split(" ");
-        }else {
-            keyword_list = new String[]{keywords};
-        }
-        return Util.transformFromCollection(tipDAO.query(keyword_list));
-    }
-
-
-    public void initTip() {
-        ArrayList<HashMap<String, Object>> list = new ArrayList<>();
-        list = tipDAO.query("0");
-
     }
 
     /**
@@ -89,12 +70,12 @@ public class TipService extends Service{
         if (summary.equals("") || content.equals("")) {
             return TOO_SHORT;
         }
-        long id_new = tipDAO.create(title, summary, content, create_time, creator, creator_type);
+        long id_new = tipDAO.create(title, summary, "", create_time, creator, creator_type);
         if (id_new != 0) {
             ArrayList<HashMap<String,Object>> list_tip_log = new ArrayList<>();
             HashMap<String,Object> map_tip_log = new HashMap<>();
             map_tip_log.put("summary",summary);
-            map_tip_log.put("content",content);
+            map_tip_log.put("content", "");
             list_tip_log.add(map_tip_log);
             tipLogDAO.add(id_new, Util.transformFromCollection(list_tip_log), create_time, creator, creator_type);
 
@@ -102,6 +83,20 @@ public class TipService extends Service{
             HashMap<String, Object> map = new HashMap<>();
             map.put("id", String.valueOf(id_new));
             list.add(map);
+
+            //将内容同步到文件
+            Util.writeTipContent(id_new, content);
+
+            //ElasticSearch同步新增
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("id", id_new);
+            hashMap.put("del", 0);
+            hashMap.put("title", title);
+            hashMap.put("summary", summary);
+            ArrayList<HashMap<String, Object>> arrayList = new ArrayList<>();
+            arrayList.add(hashMap);
+            ElasticsearchEntrance.addDocument(arrayList);
+
             return Util.transformFromCollection(list);
         }
         return FAIL;
@@ -118,6 +113,13 @@ public class TipService extends Service{
     public String delete(long id,long creator,String create_time,int creator_type) {
         if (tipDAO.delete(id)) {
             tipLogDAO.delete(id,"",create_time,creator,creator_type);
+
+            //ElasticSearch同步删除
+            try {
+                ElasticsearchEntrance.updateDocumentDeleteField(id, 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return SUCCESS;
         }
         return FAIL;
@@ -134,6 +136,12 @@ public class TipService extends Service{
     public String recover(long id,long creator,String create_time,int creator_type) {
         if (tipDAO.recover(id)) {
             tipLogDAO.recover(id,"",create_time,creator,creator_type);
+            //ElasticSearch同步恢复
+            try {
+                ElasticsearchEntrance.updateDocumentDeleteField(id, 0);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return SUCCESS;
         }
         return FAIL;
@@ -160,20 +168,32 @@ public class TipService extends Service{
         if (summary.equals("") || content.equals("")) {
             return TOO_SHORT;
         }
-        if (tipDAO.update(id, title, summary, content, last_modify_time)) {
+        if (tipDAO.update(id, title, summary, "", last_modify_time)) {
+
+            //更新内容
+            Util.writeTipContent(id, content);
+
+            //写入日志
             ArrayList<HashMap<String,Object>> list_tip_log = new ArrayList<>();
             HashMap<String,Object> map_tip_log = new HashMap<>();
             map_tip_log.put("summary",summary);
-            map_tip_log.put("content",content);
+            map_tip_log.put("content", "");
             list_tip_log.add(map_tip_log);
             tipLogDAO.update(id,Util.transformFromCollection(list_tip_log),last_modify_time,creator,creator_type);
+
+            //更新ElasticSearch索引
+            try {
+                ElasticsearchEntrance.updateDocumentWithoutDelete(id, title, summary);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return SUCCESS;
         }
         return FAIL;
     }
 
     /**
-     * 更新
+     * 仅更新简要
      *
      * @param id
      * @param summary
