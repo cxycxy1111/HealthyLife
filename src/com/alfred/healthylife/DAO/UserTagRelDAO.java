@@ -131,13 +131,11 @@ public class UserTagRelDAO extends DAO {
      * @param type
      * @return
      */
-    public ArrayList<HashMap<String, Object>> queryByUser(long user_id, int type, int page_no, int num_limit) {
-        int location = (page_no - 1) * num_limit;
-        String sql = "SELECT b.id,b.title,b.summary FROM user_tag a " +
+    public ArrayList<HashMap<String, Object>> queryByUser(long user_id, int type) {
+        String sql = "SELECT b.id,b.title FROM user_tag a " +
                 "LEFT JOIN tag b ON a.tag_id=b.id " +
                 "WHERE a.del=0 AND a.user_id=" + user_id + " AND a.type=" + type + " " +
-                "ORDER BY a.create_time DESC " +
-                "LIMIT " + location + "," + num_limit;
+                "ORDER BY a.create_time DESC";
         return helper.query(sql);
     }
 

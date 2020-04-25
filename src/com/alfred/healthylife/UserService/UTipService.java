@@ -6,9 +6,7 @@ import com.alfred.healthylife.DAO.TipTagRelDAO;
 import com.alfred.healthylife.DAO.UserTipRelDAO;
 import com.alfred.healthylife.Util.Util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
 
 public class UTipService extends Service {
 
@@ -48,7 +46,10 @@ public class UTipService extends Service {
     }
 
     public String queryTipsByTag(long tag_id, int page_no, int num_lmt) {
-        return Util.transformFromCollection(tipTagRelDAO.queryByTag(tag_id, page_no, num_lmt));
+        ArrayList<HashMap<String, Object>> list = new ArrayList<>();
+        list = tipTagRelDAO.queryByTag(tag_id, page_no, num_lmt);
+        Collections.shuffle(list);
+        return Util.transformFromCollection(list);
     }
 
     /**

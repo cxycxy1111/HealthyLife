@@ -76,12 +76,23 @@ public class UUserTagRelService extends UService {
      *
      * @param user_id
      * @param type
-     * @param page_no
-     * @param num_lmt
      * @return
      */
-    public String queryByUser(long user_id, int type, int page_no, int num_lmt) {
-        return Util.transformFromCollection(userTagRelDAO.queryByUser(user_id, type, page_no, num_lmt));
+    public String queryByUser(long user_id, int type) {
+        return Util.transformFromCollection(userTagRelDAO.queryByUser(user_id, type));
+    }
+
+
+    public String queryIfLike(long user_id, long tag_id, int type) {
+        ArrayList<HashMap<String, Object>> list = new ArrayList<>();
+        list = userTagRelDAO.queryByUserAndTag(user_id, tag_id, type);
+        if (list.size() == 0) {
+            return FAIL;
+        }
+        if (Util.getBoolFromMapList(list, "del")) {
+            return FAIL;
+        }
+        return SUCCESS;
     }
 
     /**

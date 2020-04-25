@@ -63,7 +63,9 @@ public class TipTagRelDAO extends DAO {
         int loc = (page_no - 1) * num_lmt;
         String sql = "SELECT b.title,b.summary,b.id FROM tip_tag a " +
                 "LEFT JOIN tip b ON a.tip_id=b.id " +
-                "WHERE a.del=0 AND b.del=0 AND a.tag_id=" + tag_id + " LIMIT " + loc + "," + num_lmt;
+                "WHERE a.del=0 AND b.del=0 AND a.tag_id=" + tag_id + " " +
+                "ORDER BY b.favourite_count DESC " +
+                "LIMIT " + loc + "," + num_lmt;
         return helper.query(sql);
     }
 

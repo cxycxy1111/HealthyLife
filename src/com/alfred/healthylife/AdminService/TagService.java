@@ -26,7 +26,9 @@ public class TagService extends Service {
     }
 
     public String query(String del, int page_no) {
-        return Util.transformFromCollection(tagDAO.query(del, page_no, 20));
+        ArrayList<HashMap<String, Object>> list = new ArrayList<>();
+        list = tagDAO.query(del, page_no, 20);
+        return Util.transformFromCollection(list);
     }
 
     public String query(long id) {
