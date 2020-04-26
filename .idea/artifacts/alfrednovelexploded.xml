@@ -2,10 +2,10 @@
   <artifact type="exploded-war" name="alfrednovelexploded">
     <output-path>$PROJECT_DIR$/out/artifacts/alfrednovelexploded</output-path>
     <root id="root">
-      <element id="javaee-facet-resources" facet="HealthyLife/web/Web" />
+      <element id="javaee-facet-resources" facet="HLUser/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="HealthyLife" />
+          <element id="module-output" name="HLUser" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="json" />

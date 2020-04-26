@@ -1,9 +1,6 @@
 package com.alfred.healthylife.Util;
 
-import com.alfred.healthylife.AdminService.TipService;
 import com.alfred.healthylife.DAO.TipDAO;
-import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.client.RequestOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -79,6 +79,23 @@ public class TagDAO extends DAO{
     }
 
     /**
+     * 更新标签
+     *
+     * @param id
+     * @param num
+     * @return
+     */
+    public boolean updateTipCount(long id, int num) {
+        String sql = "UPDATE tag SET related_tips_count = " + num + " WHERE id=" + id;
+        try {
+            return helper.update(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
      * 增加收藏数
      *
      * @param id
@@ -121,7 +138,7 @@ public class TagDAO extends DAO{
         int location = (page_no - 1) * num_lmt;
         String sql = "SELECT * FROM tag " +
                 "WHERE del IN (" + del + ") " +
-                "ORDER BY id DESC " +
+                "ORDER BY related_tips_count DESC " +
                 "LIMIT " + location + "," + num_lmt;
         return helper.query(sql);
     }
@@ -139,7 +156,7 @@ public class TagDAO extends DAO{
     }
 
     /**
-     * 通过标题查询标签
+     * 通过id查询标签
      *
      * @param id
      * @return
@@ -158,6 +175,16 @@ public class TagDAO extends DAO{
     public ArrayList<HashMap<String, Object>> query() {
         String sql = "SELECT * FROM tag " +
                 "WHERE del = 0";
+        return helper.query(sql);
+    }
+
+    /**
+     * 查询
+     *
+     * @return
+     */
+    public ArrayList<HashMap<String, Object>> queryAll() {
+        String sql = "SELECT * FROM tag";
         return helper.query(sql);
     }
 

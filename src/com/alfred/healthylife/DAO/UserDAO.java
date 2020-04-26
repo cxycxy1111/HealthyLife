@@ -64,36 +64,6 @@ public class UserDAO extends DAO{
     }
 
     /**
-     * 锁定用户
-     * @param id 用户ID
-     * @return 锁定结果
-     */
-    public boolean lock(long id){
-        String sql = "UPDATE user SET locked=1 WHERE id=" + id;
-        try {
-            return helper.update(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * 解锁用户
-     * @param id 用户ID
-     * @return 解锁结果
-     */
-    public boolean unlock(long id){
-        String sql = "UPDATE user SET locked=0 WHERE id=" + id;
-        try {
-            return helper.update(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
      * 更新用户信息
      * @param id 用户ID
      * @param nick_name 昵称
@@ -139,21 +109,6 @@ public class UserDAO extends DAO{
             e.printStackTrace();
             return false;
         }
-    }
-
-    /**
-     * 查询用户列表
-     *
-     * @param page_no   页码
-     * @param num_limit 每页数量限制
-     * @return 用户信息
-     */
-    public ArrayList<HashMap<String, Object>> queryUsers(String del, String locked, int page_no, int num_limit) {
-        int location = (page_no - 1) * num_limit;
-        String sql = "SELECT * FROM user " +
-                "WHERE del IN (" + del + ") AND locked IN (" + locked + ") " +
-                "ORDER BY id DESC LIMIT " + location + "," + num_limit;
-        return helper.query(sql);
     }
 
     /**

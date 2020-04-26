@@ -168,14 +168,13 @@ public class TipDAO extends DAO{
      * @param id
      * @return
      */
-    public boolean increaseFavouriteCount(long id) {
+    public void increaseFavouriteCount(long id) {
         String sql = "UPDATE tip SET favourite_count=(SELECT i.favourite_count FROM (SELECT favourite_count FROM " +
                 "tip WHERE id=" + id + ") i)+1 WHERE id=" + id;
         try {
-            return helper.update(sql);
+            helper.update(sql);
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
@@ -185,14 +184,29 @@ public class TipDAO extends DAO{
      * @param id
      * @return
      */
-    public boolean decreaseFavouriteCount(long id) {
+    public void decreaseFavouriteCount(long id) {
         String sql = "UPDATE tip SET favourite_count=(SELECT i.favourite_count FROM (SELECT favourite_count FROM " +
                 "tip WHERE id=" + id + ") i)-1 WHERE id=" + id;
         try {
-            return helper.update(sql);
+            helper.update(sql);
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+        }
+    }
+
+    /**
+     * 增加收藏数
+     *
+     * @param id
+     * @return
+     */
+    public void increaseReadCount(long id) {
+        String sql = "UPDATE tip SET read_count=(SELECT i.read_count FROM (SELECT read_count FROM " +
+                "tip WHERE id=" + id + ") i)+1 WHERE id=" + id;
+        try {
+            helper.update(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
