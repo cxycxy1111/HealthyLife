@@ -74,4 +74,24 @@ public class TipTagRelDAO extends DAO {
         return helper.query(sql);
     }
 
+    public ArrayList<HashMap<String, Object>> queryFavouriteTagsRelatedTipsByUserId(long user_id) {
+        String sql = "SELECT b.id,b.title,b.summary FROM tip_tag a " +
+                "LEFT JOIN tip b ON a.tip_id=b.id " +
+                "WHERE a.tag_id IN (" +
+                "SELECT tag_id FROM user_tag " +
+                "WHERE del=0 AND user_id=" + user_id + ")" +
+                " AND a.del=0 AND b.del=0";
+        return helper.query(sql);
+    }
+
+    public ArrayList<HashMap<String, Object>> queryNotFavouriteTagsRelatedTipsByUserId(long user_id) {
+        String sql = "SELECT b.id,b.title,b.summary FROM tip_tag a " +
+                "LEFT JOIN tip b ON a.tip_id=b.id " +
+                "WHERE a.tag_id NOT IN (" +
+                "SELECT tag_id FROM user_tag " +
+                "WHERE del=0 AND user_id=" + user_id + ")" +
+                " AND a.del=0 AND b.del=0";
+        return helper.query(sql);
+    }
+
 }
